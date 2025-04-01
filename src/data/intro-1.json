@@ -1,0 +1,7 @@
+{
+    "id": "intro-1",
+    "name": "Assumption Rule",
+    "description": "Learn to use the assumption rule.",
+    "premises": ["P", "Q → R"],
+    "goal": "P"
+  }
