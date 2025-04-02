@@ -35,3 +35,13 @@
   margin-inline-start: 0px;
   margin-inline-end: 0px;
 }
+
+.markdown ul {
+  list-style: disc;
+  list-style-position: inside;
+}
+
+.markdown ol {
+  list-style:decimal;
+  list-style-position: inside;
+}
