@@ -1,5 +1,5 @@
 {
-    "id": "modus-ponens",
+    "id": 2,
     "name": "Modus Ponens",
     "description": "Learn to use the Modus Ponens rule.",
     "premises": ["P", "P → Q"],

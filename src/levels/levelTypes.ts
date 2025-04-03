@@ -1,5 +1,5 @@
 export interface Level {
-    id: string;
+    id: number;
     name: string;
     description: string;
     premises: string[]; // 公式暂时还是字符串

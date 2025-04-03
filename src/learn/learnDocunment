@@ -1,1 +1,4 @@
 .tsx 是 TypeScript for JSX 的文件扩展名。
+
+..是上一级
+.是本文件夹

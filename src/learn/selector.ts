@@ -27,7 +27,7 @@ const useBearStore = create<BearState & BearActions>((set) => ({
 
 
 //如果您想构造一个内部有多个状态选择的单一对象，类似于 redux 的 mapStateToProps ，您可以通过传递 shallow 相等函数告诉 zustand 您希望对象被浅拆分。
-
+/*
 const { nuts: selectedNuts, honey: selectedHoney } = useBearStore(
   (state) => ({ nuts: state.nuts, honey: state.honey }),
   shallow
@@ -53,4 +53,4 @@ const treats = useBearStore((state) => Object.keys(state.treats), shallow)
 const treats = useBearStore(
   (state) => state.treats,
   (oldTreats, newTreats) => compare(oldTreats, newTreats)
-)
+)*/
