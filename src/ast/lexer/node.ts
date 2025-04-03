@@ -158,25 +158,25 @@ export class Term {
   }
   
   // 使用示例
-  const P = new Atomic('P');
-  const Q = new Atomic('Q');
-  const R = new Atomic('R');
+  // const P = new Atomic('P');
+  // const Q = new Atomic('Q');
+  // const R = new Atomic('R');
   
-  const notP = new Negation(P);
-  const P_and_Q = new Conjunction(P, Q);
-  const P_or_Q = new Disjunction(P, Q);
-  const P_implies_Q = new Implication(P, Q);
-  const P_iff_Q = new Biconditional(P, Q);
+  // const notP = new Negation(P);
+  // const P_and_Q = new Conjunction(P, Q);
+  // const P_or_Q = new Disjunction(P, Q);
+  // const P_implies_Q = new Implication(P, Q);
+  // const P_iff_Q = new Biconditional(P, Q);
   
-  console.log(notP.toString());        // 输出: ¬P
-  console.log(P_and_Q.toString());     // 输出: (P ∧ Q)
-  console.log(P_or_Q.toString());      // 输出: (P ∨ Q)
-  console.log(P_implies_Q.toString()); // 输出: (P → Q)
-  console.log(P_iff_Q.toString());     // 输出: (P ↔ Q)
+  // console.log(notP.toString());        // 输出: ¬P
+  // console.log(P_and_Q.toString());     // 输出: (P ∧ Q)
+  // console.log(P_or_Q.toString());      // 输出: (P ∨ Q)
+  // console.log(P_implies_Q.toString()); // 输出: (P → Q)
+  // console.log(P_iff_Q.toString());     // 输出: (P ↔ Q)
   
-  // 更复杂的嵌套表达式
-  const complexExpr = new Implication(
-    new Conjunction(P, new Negation(Q)),
-    new Disjunction(R, new Biconditional(P, Q))
-  );
-  console.log(complexExpr.toString()); // 输出: ((P ∧ ¬Q) → (R ↔ (P ↔ Q)))
+  // // 更复杂的嵌套表达式
+  // const complexExpr = new Implication(
+  //   new Conjunction(P, new Negation(Q)),
+  //   new Disjunction(R, new Biconditional(P, Q))
+  // );
+  // console.log(complexExpr.toString()); // 输出: ((P ∧ ¬Q) → (R ↔ (P ↔ Q)))
