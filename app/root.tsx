@@ -35,7 +35,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <div className="h-[100vh] w-full flex flex-col">
+        <div className="h-[100vh] w-full max-h-[100vh]">
           {children}
         </div>
         <ScrollRestoration />

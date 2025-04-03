@@ -2,7 +2,7 @@ import Markdown from "react-markdown";
 
 export default function ChatPanel() {
   return (
-    <div className="h-full w-[calc(25%-5px)] pr-2 pl-2 bg-white">
+    <div className="h-full w-[calc(25%-5px)] pr-2 pl-2 bg-white overflow-auto">
       <ChatContainer />
     </div>
   );
@@ -32,7 +32,7 @@ function ChatContainer() {
     `;
 
   return (
-    <div className="flex flex-col gap-2 p-2 overflow-y-scroll box-border">
+    <div className="flex flex-col gap-2 p-2 box-border">
       <Message markdownText={test_markdown} />
     </div>
   );
