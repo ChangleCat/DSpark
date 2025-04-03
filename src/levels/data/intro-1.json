@@ -1,0 +1,17 @@
+{
+<<<<<<< HEAD
+  "id": "intro-1",
+  "name": "Assumption Rule",
+  "description": "Learn to use the assumption rule.",
+  "premises": ["P", "Q → R"],
+  "goal": "P",
+  "isProved":false
+}
+=======
+    "id": "intro-1",
+    "name": "Assumption Rule",
+    "description": "Learn to use the assumption rule.",
+    "premises": ["P", "Q → R"],
+    "goal": "P"
+  }
+>>>>>>> 881730d29401e7ed8c71e72c177d34eb025dc89a

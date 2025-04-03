@@ -7,6 +7,8 @@ import {
   ScrollRestoration,
 } from "react-router";
 
+import {loadLevelData} from "../src/levels/levelLoader";
+console.log(loadLevelData('intro-1'));
 import type { Route } from "./+types/root";
 import "./app.css";
 

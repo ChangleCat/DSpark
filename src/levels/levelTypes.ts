@@ -4,5 +4,5 @@ export interface Level {
     description: string;
     premises: string[]; // 公式暂时还是字符串
     goal: string;       // 公式暂时还是字符串
-    availableRules?: string[];
+    isProved:boolean;
   }

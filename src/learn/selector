@@ -1,0 +1,65 @@
+不使用 selector 获取所有数据
+您可以这样做，但是请记住，这会导致组件在每次状态更改时都进行更新!
+...
+const state = useBearStore()
+在状态管理的语境中，基于 selector 进行状态选择，并默认检测严格相等的变化（old === new），通常涉及到像 Redux 的 useSelector 或者类似的状态选择机制。下面为你详细解释：
+1. 基于 selector 进行状态选择
+Selector（选择器）：Selector 是一个函数，它接收整个应用的状态（state tree）作为参数，并返回你感兴趣的那部分状态。例如，在一个包含用户信息、购物车信息等的复杂应用状态中，如果你只关心购物车中的商品数量，你可以编写一个 selector 函数来提取这个信息。
+示例：假设使用 Redux 管理状态，状态结构如下：
+typescript
+interface RootState {
+    user: { name: string; age: number };
+    cart: { items: string[]; quantity: number };
+    settings: { theme: string };
+}
+要选择购物车中的商品数量，可以定义如下 selector：
+typescript
+const selectCartQuantity = (state: RootState) => state.cart.quantity;
+然后，在组件中使用 useSelector 来获取这个状态：
+typescript
+import { useSelector } from'react-redux';
+
+const MyComponent: React.FC = () => {
+    const cartQuantity = useSelector(selectCartQuantity);
+    return (
+        <div>
+            <p>购物车商品数量: {cartQuantity}</p>
+        </div>
+    );
+};
+2. 默认检测严格相等的变化（old === new）
+变化检测机制：当使用基于 selector 的状态选择时，状态管理库需要一种方式来确定所选状态是否发生了变化，以便决定是否重新渲染依赖该状态的组件。默认情况下，许多状态管理库使用严格相等（===）来进行这种比较。
+具体含义：对于基本数据类型（如 number、string、boolean 等），严格相等比较很直观。例如，5 === 5 为 true，'hello' === 'world' 为 false。对于对象和数组，严格相等比较的是它们的引用地址，而不是内容。例如：
+typescript
+const obj1 = { key: 'value' };
+const obj2 = { key: 'value' };
+console.log(obj1 === obj2); 
+// 输出 false，因为obj1和obj2虽然内容相同，但它们是不同的对象引用
+
+const arr1 = [1, 2, 3];
+const arr2 = [1, 2, 3];
+console.log(arr1 === arr2); 
+// 输出 false，因为arr1和arr2虽然内容相同，但它们是不同的数组引用
+
+
+影响：这意味着如果一个组件依赖的状态是对象或数组，即使对象或数组的内容发生了变化，但只要引用地址不变，状态管理库可能不会检测到变化，组件也就不会重新渲染。例如：
+typescript
+const selectCartItems = (state: RootState) => state.cart.items;
+
+const MyComponent: React.FC = () => {
+    const cartItems = useSelector(selectCartItems);
+    //...
+};
+
+
+如果 cart.items 数组在状态更新时没有创建新的数组实例（例如通过 push 方法直接修改原数组），虽然数组内容改变了，但引用地址不变，基于严格相等检测，组件不会重新渲染。为了确保组件能响应状态变化，通常需要在更新状态时创建新的对象或数组实例，例如使用展开运算符：
+typescript
+// 正确的更新方式，创建新数组
+const newCart = {
+   ...state.cart,
+    items: [...state.cart.items, 'new item']
+};
+// 错误的更新方式，直接修改原数组，不会触发组件重新渲染
+state.cart.items.push('new item');
+
+这种基于严格相等的变化检测机制在性能优化方面有重要意义，因为它避免了不必要的组件重新渲染，但同时也要求开发者在更新状态时遵循特定的模式以确保状态变化能被正确检测到。
