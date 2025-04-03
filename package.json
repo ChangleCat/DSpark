@@ -17,7 +17,7 @@
     "react-dom": "^19.0.0",
     "react-markdown": "^10.1.0",
     "react-router": "^7.4.1",
-    "react-syntax-highlighter": "^15.6.1"
+    "react-syntax-highlighter": "^5.8.0"
   },
   "devDependencies": {
     "@iconify/react": "^5.2.1",
@@ -27,12 +27,12 @@
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.1",
     "@types/react-syntax-highlighter": "^15.5.13",
-    "@vercel/node": "^5.1.2",
+    "@vercel/node": "^2.3.0",
     "@vercel/react-router": "^1.1.0",
     "react-router-devtools": "^1.1.0",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.7.2",
-    "vite": "^5.4.11",
+    "vite": "^6.2.5",
     "vite-tsconfig-paths": "^5.1.4"
   }
 }
