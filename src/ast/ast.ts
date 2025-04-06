@@ -28,6 +28,7 @@ export type Token =
 
 export type TokenType = 'identifier' | 'symbol' | 'keyword' | 'connect';
 
+
 // forall.x [ P(x) -> exists.y [ Q(x, y) & R(y) ] ]
 export function tokenize(input: string): Token[] {
     const tokens: Token[] = [];
