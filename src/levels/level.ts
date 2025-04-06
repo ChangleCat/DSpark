@@ -4,7 +4,7 @@ import { promisify } from 'util';
 import { create } from 'zustand';
 
 // 引入默认关卡
-import level00 from './data/0-0.json'; // 默认关卡
+import level00 from './level_data/0-0.json'; // 默认关卡
 
 // 关卡的信息
 interface Level {
@@ -12,9 +12,11 @@ interface Level {
     union: number; // 大关卡索引
     chapter: number; // 小关卡索引
     name: string; // 名称
+    brief: string; // 简介
     description: string; // 描述
-    premises: string[]; // 前提
+    premises: string; // 前提
     goal: string; // 目标
+    //ruleId: number[]; // 可用的规则
     isProved: boolean; // 是否被证明
 }
 
@@ -44,58 +46,34 @@ const readMarkdownFile = async (filePath: string): Promise<string> => {
 
 // 所有关卡的状态
 interface LevelState {
-    levels: Level[]; // 存储所有关卡
-    currentLevelIndex: number; // 当前关卡索引
+    currentLevel: Level; // 当前关卡 
     showDescription: (level: Level) => void; // 显示关卡描述
     loadLevel: (union: number, chapter: number) => void; // 新增加载关卡函数
 }
 
 export const useLevelStore = create<LevelState>((set) => ({
-    levels: [],
-    currentLevelIndex: 0,
-    showDescription: (level: Level) => {
-        return level.description;
+    currentLevel: level00, // 默认关卡
+    showDescription: (currentLevel: Level) => {
+        return currentLevel.description;
     },
     loadLevel: async (union: number, chapter: number) => {
-        const jsonFileName = `./data/${union}-${chapter}.json`;
-        const markdownFilePath = `./data/${union}-${chapter}.md`;
+        const jsonPath = `./data/${union}-${chapter}.json`;
+        const markdownPath = `./data/${union}-${chapter}.md`;
 
-        const jsonData = await readJsonFile<Level>(jsonFileName);
+        const jsonData = await readJsonFile<Level>(jsonPath);
         if (!jsonData) {
             return;
         }
 
-        const markdownContent = await readMarkdownFile(markdownFilePath);
-        jsonData.description = markdownContent;
+        const markdownData = await readMarkdownFile(markdownPath);
+        jsonData.description = markdownData;
 
-        set((state) => {
-            const newLevels = [...state.levels, jsonData];
-            const newIndex = newLevels.length - 1;
-            return {
-               ...state,
-                levels: newLevels,
-                currentLevelIndex: newIndex
-            };
-        });
-    }
+        set((state) => ({
+            currentLevel: jsonData,
+        }));
+    },
+    
 }));
 
-// 当前关卡的状态
-interface currentLevelState {
-    currentLevel: Level; // 当前关卡
-    setCurrentLevel: (union: number, chapter: number) => void; // 设置当前关卡
-}
-
-// 使用zustand来管理当前关卡的状态
-export const useCurrentLevelStore = create<currentLevelState>((set) => ({
-    currentLevel: level00, // 默认关卡
-    setCurrentLevel: async (union: number, chapter: number) => {
-        const levelStore = useLevelStore.getState();
-        await levelStore.loadLevel(union, chapter);
-        const newIndex = levelStore.currentLevelIndex;
-        const newLevel = levelStore.levels[newIndex];
-        set({ currentLevel: newLevel });
-    }
-}));
 
 

@@ -2,6 +2,7 @@
     "id": 2,
     "name": "Modus Ponens",
     "description": "Learn to use the Modus Ponens rule.",
-    "premises": ["P", "P → Q"],
-    "goal": "Q"
+    "premises": "P,P → Q",
+    "goal": "Q",  
+    "isProved": false
   }
