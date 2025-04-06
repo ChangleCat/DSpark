@@ -1,5 +1,3 @@
-import { Grouping } from "../ast/node";
-
 export type Var = string;
 
 export type Term = 
@@ -19,6 +17,8 @@ export type Formula =
     | { kind: 'or', left: Formula, right: Formula }
     | { kind: 'implies', left: Formula, right: Formula}
     | { kind: 'grouping', body: Formula }
+    | { kind: 'F'}
+    | { kind: 'T'}
     | { kind: 'forall', var: Var, body: Formula }
     | { kind: 'exists', var: Var, body: Formula };
 
@@ -226,9 +226,15 @@ export function equalFormula(f1: Formula, f2: Formula): boolean {
     } else if (f1.kind === 'predicate' && f2.kind === 'predicate') {
         if (f1.name === f2.name) {
             if (f1.args.length === f2.args.length) {
-                for (const i = 0; i < f)
-            }
+                for (let i = 0; i < f1.args.length; i++) {
+                    if (f1.args[i] !== f2.args[i]) return false;
+                }
+                return true;
+            } else return false;
         }
+        return false;
+    } else {
+        return false;
     }
 }
 //遍历树模板
