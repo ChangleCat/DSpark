@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> a5639dc0e9ff7fd290f57ebef4d32e3eff32ea02
 export type Var = string;
 
 export type Term = 
