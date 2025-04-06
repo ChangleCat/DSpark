@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "~/welcome/welcome";
+import { Welcome } from "~/interface/welcome";
 
 export function meta({}: Route.MetaArgs) {
   return [

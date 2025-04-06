@@ -1,14 +1,20 @@
 import Markdown from "react-markdown";
+import { useLevelStore } from "src/levels/level";
 
 export default function ChatPanel() {
+  const currentLevel = useLevelStore((state) => state.currentLevel);
+  if (!currentLevel) {
+    return <div className="h-full w-[calc(25%-5px)] pr-2 pl-2 bg-white overflow-auto">Loading...</div>;
+  }
+  
   return (
     <div className="h-full w-[calc(25%-5px)] pr-2 pl-2 bg-white overflow-auto">
-      <ChatContainer />
+      <ChatContainer markdownText={currentLevel.description}/>
     </div>
   );
 }
 
-function ChatContainer() {
+function ChatContainer({ markdownText }: { markdownText: string }) {
   let test_markdown = `
 好的，对于新手团队来说，掌握一个清晰、安全的 Git 工作流程至关重要。下面是一个适合你们三人团队的、相对简单且实用的 Git 工作流程，以及详细的步骤说明：
 
@@ -33,7 +39,7 @@ function ChatContainer() {
 
   return (
     <div className="flex flex-col gap-2 p-2 box-border">
-      <Message markdownText={test_markdown} />
+      <Message markdownText={markdownText} />
     </div>
   );
 }
