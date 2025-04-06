@@ -7,7 +7,7 @@
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc",
-    "runts" : "ts-node ./src/node.ts"
+    "runts": "ts-node ./src/node.ts"
   },
   "dependencies": {
     "@react-router/node": "^7.4.1",
@@ -18,7 +18,8 @@
     "react-dom": "^19.0.0",
     "react-markdown": "^10.1.0",
     "react-router": "^7.4.1",
-    "react-syntax-highlighter": "^5.8.0"
+    "react-syntax-highlighter": "^5.8.0",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@iconify/react": "^5.2.1",

@@ -1,3 +1,5 @@
+import { Grouping } from "../ast/node";
+
 export type Var = string;
 
 export type Term = 
@@ -27,7 +29,6 @@ export type Token =
     | { type: 'keyword'; value: string; start: number; end: number }
 
 export type TokenType = 'identifier' | 'symbol' | 'keyword' | 'connect';
-
 
 // forall.x [ P(x) -> exists.y [ Q(x, y) & R(y) ] ]
 export function tokenize(input: string): Token[] {
@@ -208,6 +209,27 @@ function printParens(f: Formula): string {
     //     return `(${printFormula(f)})`;
     // }
     return `${printFormula(f)}`;
+}
+
+export function equalFormula(f1: Formula, f2: Formula): boolean {
+    while (f1.kind === 'grouping') f1 = f1.body;
+    while (f2.kind === 'grouping') f2 = f2.body;
+
+    if (f2.kind === 'and' && f1.kind === 'and') {
+        return equalFormula(f1.left, f2.left) && equalFormula(f1.right, f2.right);
+    } else if (f1.kind === 'or' && f2.kind === 'or') {
+        return equalFormula(f1.left, f2.left) && equalFormula(f1.right, f2.right);
+    } else if (f1.kind === 'implies' && f2.kind === 'implies') {
+        return equalFormula(f1.left, f2.left) && equalFormula(f1.right, f2.right);
+    } else if (f1.kind === 'not' && f2.kind === 'not') {
+        return equalFormula(f1.formula, f2.formula);
+    } else if (f1.kind === 'predicate' && f2.kind === 'predicate') {
+        if (f1.name === f2.name) {
+            if (f1.args.length === f2.args.length) {
+                for (const i = 0; i < f)
+            }
+        }
+    }
 }
 //遍历树模板
 export function printFormula(f: Formula): string {
