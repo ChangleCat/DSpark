@@ -21,10 +21,10 @@ interface Level {
 }
 
 // 读取json文件
-const readJsonFile = async <T>(fileName: string): Promise<T | null> => {
+const readJsonFile = async <Level>(fileName: string): Promise<Level | null> => {
     try {
         const data = await promisify(fs.readFile)(path.resolve(fileName), 'utf8');
-        return JSON.parse(data) as T;
+        return JSON.parse(data) as Level;
     } catch (error) {
         console.error(`Error reading ${fileName}:`, error);
         return null;
@@ -48,7 +48,7 @@ const readMarkdownFile = async (filePath: string): Promise<string> => {
 interface LevelState {
     currentLevel: Level; // 当前关卡 
     showDescription: (level: Level) => void; // 显示关卡描述
-    loadLevel: (union: number, chapter: number) => void; // 新增加载关卡函数
+    loadLevel: (union: number, chapter: number) => void; // 加载关卡
 }
 
 export const useLevelStore = create<LevelState>((set) => ({
@@ -57,8 +57,8 @@ export const useLevelStore = create<LevelState>((set) => ({
         return currentLevel.description;
     },
     loadLevel: async (union: number, chapter: number) => {
-        const jsonPath = `./data/${union}-${chapter}.json`;
-        const markdownPath = `./data/${union}-${chapter}.md`;
+        const jsonPath = `./level_data/${union}-${chapter}.json`;
+        const markdownPath = `./level_data/${union}-${chapter}.md`;
 
         const jsonData = await readJsonFile<Level>(jsonPath);
         if (!jsonData) {
