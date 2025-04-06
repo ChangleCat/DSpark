@@ -69,7 +69,7 @@ export const useLevelStore = create<LevelState>((set) => ({
         jsonData.description = markdownData;
 
         set((state) => ({
-            currentLevel: jsonData,
+            currentLevel: jsonData, 
         }));
     },
     
