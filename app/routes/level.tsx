@@ -19,7 +19,7 @@ export default function Level({ params }: Route.LoaderArgs) {
 //   if (isNaN(union) || isNaN(chapter)) {
 //     throw new Error("Invalid level ID format");
 //   }
-
+  // console.log("Loading level:", union, chapter);
   useLevelStore((state) => state.loadLevel(union, chapter));
   if (!useLevelStore.getState().currentLevel) {
     useLevelStore((state) => state.loadLevel(0, 0));

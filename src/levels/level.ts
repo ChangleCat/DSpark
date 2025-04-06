@@ -4,7 +4,7 @@ import { promisify } from 'util';
 import { create } from 'zustand';
 
 // 引入默认关卡
-import level00 from './level_data/0-0.json'; // 默认关卡
+import level00 from 'src/levels/level_data/0-0.json'; // 默认关卡
 
 // 关卡的信息
 interface Level {
@@ -32,7 +32,7 @@ const readJsonFile = async <Level>(fileName: string): Promise<Level | null> => {
 };
 
 // 读取markdown文件
-const readMarkdownFile = async (filePath: string): Promise<string> => {
+const readMarkdownFile = (filePath: string): Promise<string> => {
     return new Promise((resolve, reject) => {
         fs.readFile(path.resolve(filePath), 'utf8', (err, data) => {
             if (err) {
@@ -47,11 +47,13 @@ const readMarkdownFile = async (filePath: string): Promise<string> => {
 // 所有关卡的状态
 interface LevelState {
     currentLevel: Level; // 当前关卡 
+    markdownData: string; // 当前关卡的markdown数据
     loadLevel: (union: number, chapter: number) => void; // 加载关卡
 }
 
 export const useLevelStore = create<LevelState>((set) => ({
     currentLevel: level00, // 默认关卡
+    markdownData: '', // 默认markdown数据
 
     loadLevel: async (union: number, chapter: number) => {
         const jsonPath = `src/levels/level_data/${union}-${chapter}.json`;
@@ -63,10 +65,12 @@ export const useLevelStore = create<LevelState>((set) => ({
         }
 
         const markdownData = await readMarkdownFile(markdownPath);
+        console.log('markdownData', markdownData);
         jsonData.description = markdownData;
 
         set((state) => ({
             currentLevel: jsonData,
+            markdownData: markdownData,
         }));
     },
     

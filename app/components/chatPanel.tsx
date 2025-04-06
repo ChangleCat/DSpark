@@ -3,6 +3,7 @@ import { useLevelStore } from "src/levels/level";
 
 export default function ChatPanel() {
   const currentLevel = useLevelStore((state) => state.currentLevel);
+  console.log("markdownText", currentLevel);
   if (!currentLevel) {
     return <div className="h-full w-[calc(25%-5px)] pr-2 pl-2 bg-white overflow-auto">Loading...</div>;
   }
