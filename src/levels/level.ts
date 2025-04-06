@@ -47,18 +47,15 @@ const readMarkdownFile = async (filePath: string): Promise<string> => {
 // 所有关卡的状态
 interface LevelState {
     currentLevel: Level; // 当前关卡 
-    showDescription: (level: Level) => void; // 显示关卡描述
-    loadLevel: (union: number, chapter: number) => void; // 新增加载关卡函数
+    loadLevel: (union: number, chapter: number) => void; // 加载关卡
 }
 
 export const useLevelStore = create<LevelState>((set) => ({
     currentLevel: level00, // 默认关卡
-    showDescription: (currentLevel: Level) => {
-        return currentLevel.description;
-    },
+
     loadLevel: async (union: number, chapter: number) => {
-        const jsonPath = `./level_data/${union}-${chapter}.json`;
-        const markdownPath = `./level_data/${union}-${chapter}.md`;
+        const jsonPath = `src/levels/level_data/${union}-${chapter}.json`;
+        const markdownPath = `src/levels/level_data/${union}-${chapter}.md`;
 
         const jsonData = await readJsonFile<Level>(jsonPath);
         if (!jsonData) {
@@ -69,7 +66,7 @@ export const useLevelStore = create<LevelState>((set) => ({
         jsonData.description = markdownData;
 
         set((state) => ({
-            currentLevel: jsonData, 
+            currentLevel: jsonData,
         }));
     },
     

@@ -1,0 +1,39 @@
+=> 有两种主要用途，分别是定义箭头函数和作为类型注解中的函数类型语法。
+1. 定义箭头函数
+箭头函数提供了一种简洁的函数定义方式，具有词法作用域（其 this 绑定到外层作用域）。其基本语法结构为：(parameters) => expression 或 (parameters) => { statements; }。
+
+无参数箭头函数：
+const greet = () => console.log('Hello!');
+greet(); 
+这里 () => console.log('Hello!') 定义了一个无参数的箭头函数，并将其赋值给 greet 变量。调用 greet 时会执行箭头函数内的 console.log 语句。
+
+单参数箭头函数：
+typescript
+const square = (num: number) => num * num;定义了一个接受一个 number 类型参数 num 的箭头函数，它返回 num 的平方。
+console.log(square(5)); 
+
+
+多参数箭头函数：
+typescript
+const add = (a: number, b: number) => a + b;
+console.log(add(3, 5)); 
+
+此箭头函数 (a: number, b: number) => a + b 接受两个 number 类型参数 a 和 b，返回它们的和。
+
+函数体包含多条语句的箭头函数：
+当箭头函数的函数体包含多条语句时，需要使用花括号 {} 包裹语句，并使用 return 语句返回值（除非函数的返回类型为 void）。
+typescript
+const calculate = (a: number, b: number) => {
+    const sum = a + b;
+    const product = a * b;
+    return sum + product;
+};
+console.log(calculate(2, 3)); 
+
+2. 作为类型注解中的函数类型语法
+在类型注解中，=> 用于表示函数类型。例如，定义一个接受两个 number 类型参数并返回 number 类型结果的函数类型：
+
+type AddFunction = (a: number, b: number) => number;
+const add: AddFunction = (a, b) => a + b;
+
+这里 (a: number, b: number) => number 描述了 AddFunction 类型，它表示一个函数，接受两个 number 类型参数并返回 number 类型的值。然后，定义了 add 函数，并使用 AddFunction 类型进行注解，确保 add 函数的定义符合 AddFunction 类型的要求。

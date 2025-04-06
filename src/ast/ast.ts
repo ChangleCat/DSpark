@@ -1,4 +1,3 @@
-
 export type Var = string;
 
 export type Term = 

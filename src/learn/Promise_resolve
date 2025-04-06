@@ -1,0 +1,68 @@
+在 TypeScript 中，Promise<void> 用于描述一个异步操作的返回类型，其中 void 表示该 Promise 不返回有意义的值（即 resolve 时没有传递数据）。
+Promise 基础概念：Promise 是 JavaScript 和 TypeScript 中用于处理异步操作的对象。它代表一个异步操作的最终完成（或失败）及其结果值。一个 Promise 有三种状态：pending（进行中）、fulfilled（已成功）和 rejected（已失败）。
+Promise<void> 含义：
+当使用 Promise<void> 作为函数返回类型时，意味着该函数返回一个 Promise 对象，并且这个 Promise 在成功解决（resolved）时不会返回任何有意义的数据。
+例如
+const incrementAsync: () => Promise<void> = async () => {
+    // 模拟异步操作
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // 这里没有返回值，即使使用resolve，也没有传递数据
+};
+
+
+在上述代码中，incrementAsync 函数返回类型被声明为 Promise<void>。函数内部通过 await 暂停执行，直到 Promise 被解决（这里通过 setTimeout 模拟异步操作），并且函数没有显式地返回任何值，符合 Promise<void> 的定义。
+在 JavaScript 和 TypeScript 中处理 Promise 时，resolve 是一个关键概念。
+Promise 构造函数中的 resolve
+当创建一个 Promise 对象时，Promise 构造函数接受一个执行器函数，这个执行器函数会立即执行。执行器函数接受两个参数，通常命名为 resolve 和 reject。其中，resolve 是一个函数，用于将 Promise 的状态从 pending（进行中）转变为 fulfilled（已成功），并可以传递一个值作为 Promise 的解决结果。
+示例代码如下：
+typescript
+const myPromise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        const success = true;
+        if (success) {
+            resolve('操作成功完成'); // 将Promise状态设为fulfilled，并传递成功值
+        } else {
+            reject('操作失败');
+        }
+    }, 1000);
+});
+
+myPromise.then((result) => {
+    console.log(result); // 打印 '操作成功完成'
+}).catch((error) => {
+    console.error(error);
+});
+在这个例子中，setTimeout 模拟了一个异步操作。如果 success 为 true，就调用 resolve 函数，这会触发 myPromise.then 中的回调函数执行，并将 resolve 传递的值 '操作成功完成' 作为参数传入。
+async/await 中的 resolve 含义
+在使用 async/await 语法糖时，await 只能用于 async 函数内部，它会暂停函数执行，直到其等待的 Promise 被解决（resolved 或 rejected）。这里虽然没有直接调用 resolve 函数，但 async 函数返回的 Promise 会自动处理 resolve 和 reject。
+例如：
+typescript
+async function asyncFunction() {
+    try {
+        const result = await new Promise((resolve) => {
+            setTimeout(() => {
+                resolve('异步操作结果');
+            }, 1000);
+        });
+        console.log(result); // 打印 '异步操作结果'
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+asyncFunction();
+
+
+在这个 asyncFunction 中，await 等待 Promise 调用 resolve 后，才继续执行后续代码，并将 resolve 传递的值赋给 result 变量。
+Promise.resolve 静态方法
+Promise.resolve 是 Promise 的一个静态方法，它返回一个以给定值解析后的 Promise 对象。如果这个值是一个 Promise，则直接返回这个 Promise；如果这个值是一个具有 then 方法的对象，Promise.resolve 会将其转化为 Promise 对象；否则，返回一个已解决状态且带有该值的新 Promise。
+示例：
+typescript
+const value = 42;
+const resolvedPromise = Promise.resolve(value);
+resolvedPromise.then((result) => {
+    console.log(result); // 打印 42
+});
+
+这里 Promise.resolve(value) 创建了一个已解决的 Promise，其解决值为 42，后续通过 .then 可以获取到这个值。
+综上所述，resolve 在 Promise 机制中扮演着将 Promise 标记为成功并传递结果值的重要角色，无论是在 Promise 构造函数内部，还是通过 Promise.resolve 静态方法来创建已解决的 Promise。

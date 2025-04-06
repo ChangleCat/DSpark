@@ -1,3 +1,9 @@
+//debug
+import {useLevelStore} from "../src/levels/level";
+console.log(useLevelStore);
+//debug
+
+
 import {
   isRouteErrorResponse,
   Links,
@@ -11,6 +17,7 @@ import { Suspense } from "react";
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import { loadLevelData } from "src/levels/levelLoader";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
