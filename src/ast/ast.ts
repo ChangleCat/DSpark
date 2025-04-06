@@ -168,7 +168,7 @@ class Parser {
         if (this.match('symbol', '(')) {
             const expr = this.implies();
             this.expectSymbol(')');
-            return expr;
+            return {kind: 'grouping', body: expr };
         }
 
         const name = this.expectIdentifier();
@@ -201,11 +201,12 @@ function printTerm(term: Term): string {
 }
 
 function printParens(f: Formula): string {
-    if (f.kind === 'predicate' || f.kind === 'forall' || f.kind === 'exists') {
-        return printFormula(f);
-    } else {
-        return `(${printFormula(f)})`;
-    }
+    // if (f.kind === 'predicate' || f.kind === 'forall' || f.kind === 'exists') {
+    //     return printFormula(f);
+    // } else {
+    //     return `(${printFormula(f)})`;
+    // }
+    return `${printFormula(f)}`;
 }
 //遍历树模板
 export function printFormula(f: Formula): string {
@@ -214,6 +215,8 @@ export function printFormula(f: Formula): string {
             if (f.args.length === 0) return f.name;
             return `${f.name}(${f.args.map(printTerm).join(", ")})`;
         
+        case 'grouping':
+            return `(${printParens(f.body)})`
         case 'not':
             return `¬${printParens(f.formula)}`;
 
@@ -235,4 +238,9 @@ export function printFormula(f: Formula): string {
     return '';
 }
 
-
+//const f1 = parseFormula("forall x ( P(x) -> exists y ( Q(x, y) and R(y) ))");
+const f2 = parseFormula("P & ( P -> Q )");
+const f3 = parseFormula("P & ( P(x) | Q | R)");
+const printed = printFormula(f3);
+console.log(printed);
+//console.log(JSON.stringify(formula, null, 2));
