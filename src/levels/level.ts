@@ -57,8 +57,8 @@ export const useLevelStore = create<LevelState>((set) => ({
         return currentLevel.description;
     },
     loadLevel: async (union: number, chapter: number) => {
-        const jsonPath = `./level_data/${union}-${chapter}.json`;
-        const markdownPath = `./level_data/${union}-${chapter}.md`;
+        const jsonPath = `src/levels/level_data/${union}-${chapter}.json`;
+        const markdownPath = `src/levels/level_data/${union}-${chapter}.md`;
 
         const jsonData = await readJsonFile<Level>(jsonPath);
         if (!jsonData) {
