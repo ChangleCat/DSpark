@@ -1,13 +1,13 @@
 import Markdown from "react-markdown";
-// import { parseFormula } from "src/ast/ast";
-// import type { Formula } from "src/ast/ast";
+import { parseFormula } from "src/ast/ast";
+import type { Formula } from "src/ast/ast";
 
 export default function TypewriterInterface() {
   return (
     <div className="flex flex-col max-h-full flex-1 bg-[#ddf6ff] shadow-sm overflow-hidden">
       <div className="flex-1 bg-white text-black p-2 pt-0">
         <ExerciseStatement markdownText="事情是这样的"/>
-        {/* <RenderPropositionTree tree={parseFormula("P(x) & (Q(x) -> A(x)) & B(x)")} /> */}
+        <RenderPropositionTree tree={parseFormula("P(x) & (Q(x) -> A(x)) & B(x)")} />
       </div>
       <InputBox />
     </div>
@@ -46,61 +46,66 @@ function InputBox() {
   );
 }
 
-// interface treeProps {
-//   tree: Formula;
-// }
+interface treeProps {
+  tree: Formula;
+}
 
-// // TODO: 渲染Proposition树为span树状表达式，优先级和括号处理
-// function RenderPropositionTree({tree}: treeProps) {
-//   switch (tree.kind) {
-//     case 'forall':
-//       return (
-//         <span className="">
-//           ∀ {tree.var} <RenderPropositionTree tree={tree.body} />
-//         </span>
-//       );
-//     case 'exists':
-//       return (
-//         <span className="">
-//           ∃ {tree.var} <RenderPropositionTree tree={tree.body} />
-//         </span>
-//       );
-//     case 'predicate':
-//       return (
-//         <span className="">
-//           {`${tree.name}(${tree.args.map(arg => arg.name).join(', ')})`}
-//         </span>
-//       );
-//     case 'and':
-//       return (
-//         <span className="">
-//           <RenderPropositionTree tree={tree.left} /> ∧
-//           <RenderPropositionTree tree={tree.right} />
-//         </span>
-//       );
-//     case 'or':
-//       return (
-//         <span className="text-blue-500">
-//            <RenderPropositionTree tree={tree.left} /> ∨
-//            <RenderPropositionTree tree={tree.right} />
-//         </span>
-//       );
-//     case 'not':
-//       return <span className="text-green-500"> ¬
-//         <RenderPropositionTree tree={tree.formula} />
-//       </span>;
-//     case 'implies':
-//       return (
-//         <span className="text-purple-500">
-//           (<RenderPropositionTree tree={tree.left} /> →
-//           <RenderPropositionTree tree={tree.right} />)
-//         </span>
-//       );
-//     // and-I 
-//     // or-E
-
-//     default:
-//       return <span>{`Unknown formula kind: ${tree.kind}`}</span>;
-//   }
+// TODO: 渲染Proposition树为span树状表达式，优先级和括号处理
+function RenderPropositionTree({tree}: treeProps) {
+  switch (tree.kind) {
+    case 'forall':
+      return (
+        <span className="">
+          ∀ {tree.var} <RenderPropositionTree tree={tree.body} />
+        </span>
+      );
+    case 'exists':
+      return (
+        <span className="">
+          ∃ {tree.var} <RenderPropositionTree tree={tree.body} />
+        </span>
+      );
+    case 'predicate':
+      return (
+        <span className="">
+          {`${tree.name}(${tree.args.map(arg => arg.name).join(', ')})`}
+        </span>
+      );
+    case 'and':
+      return (
+        <span className="">
+          <RenderPropositionTree tree={tree.left} /> ∧
+          <RenderPropositionTree tree={tree.right} />
+        </span>
+      );
+    case 'or':
+      return (
+        <span className="text-blue-500">
+           <RenderPropositionTree tree={tree.left} /> ∨
+           <RenderPropositionTree tree={tree.right} />
+        </span>
+      );
+    case 'not':
+      return <span className="text-green-500"> ¬
+        <RenderPropositionTree tree={tree.formula} />
+      </span>;
+    case 'implies':
+      return (
+        <span className="text-purple-500">
+          <RenderPropositionTree tree={tree.left} /> →
+          <RenderPropositionTree tree={tree.right} />
+        </span>
+      );
+    // and-I 
+    // or-E
+    case 'grouping':
+      return (
+        <span className="text-red-500">
+          ( <RenderPropositionTree tree={tree.body} /> )
+        </span>
+      );
+    // default:
+    //   return <span>{`Unknown formula kind: ${tree.kind}`}</span>;
+  }
       
-// }
+}
