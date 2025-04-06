@@ -1,0 +1,12 @@
+
+{
+    "id": 0,
+    "union": 0,
+    "chapter": 0,
+    "name": "假言推理",
+    "brief": "假言推理是一个重要的逻辑推理规则，通常用于从一个条件句和它的前件中推出它的后件。",
+    "description": "",
+    "premises": "P,P->Q",
+    "goal": "Q",
+    "isProved": false
+  }
