@@ -1,6 +1,6 @@
 import type { Route } from "./+types/level";
 import { LevelInterface } from "~/interface/levelInterface";
-import { useLevelStore } from "src/levels/level";
+import { useLevelStore } from "public/levels/level";
 
 export function meta({ params }: Route.MetaArgs) {
   return [

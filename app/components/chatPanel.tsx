@@ -1,7 +1,8 @@
 import Markdown from "react-markdown";
-import { useLevelStore } from "src/levels/level";
+import { useLevelStore } from "public/levels/level";
 
 export default function ChatPanel() {
+  useLevelStore().loadLevel(0,0);
   const currentLevel = useLevelStore((state) => state.currentLevel);
   console.log("markdownText", currentLevel);
   if (!currentLevel) {

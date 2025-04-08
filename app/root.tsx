@@ -1,5 +1,5 @@
 //debug
-import {useLevelStore} from "../src/levels/level";
+import {useLevelStore} from "../public/levels/level";
 console.log(useLevelStore);
 //debug
 
