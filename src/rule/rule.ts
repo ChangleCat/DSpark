@@ -1,5 +1,5 @@
-import type { Formula } from "../test/ast"
-import { parseFormula, equalFormula, printFormula } from "../test/ast"
+import type { Formula } from "src/ast/ast"
+import { parseFormula, equalFormula, printFormula } from "src/ast/ast"
 
 export type Side = 'left' | 'right';
 
