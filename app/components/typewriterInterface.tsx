@@ -5,6 +5,8 @@ import { useLevelStore } from "src/level/level";
 import { useEffect, useId, useState } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useHover, HoverProvider } from './HoverContext';
+import type { BaseRule, Theorem } from "src/rule/rule";
+import { infer } from "src/rule/rule";
 
 type StepData = {
   premises: Formula[];
@@ -18,6 +20,11 @@ export default function TypewriterInterface() {
   const [premisesList, setPremisesList] = useState<Formula[]>([]);
   const [goalStack, setGoalStack] = useState<Formula[]>([]);
   const [stepList, setStepList] = useState<StepData[]>([]);
+
+  // 设置当前关卡的前提和目标
+  function pushStep(step: StepData) {
+    setStepList((prev) => [...prev, step]);
+  }
 
   useEffect(() => {
     if (currentLevel == null) return;
@@ -49,7 +56,7 @@ export default function TypewriterInterface() {
         ))}
       </div>
       {/* 输入框组件，用户可以在这里输入指令并提交 */}
-      <InputBox />
+      <InputBox pushStep={pushStep}/>
     </div>
   );
 }
@@ -128,7 +135,7 @@ function ExerciseStatement({ markdownText }: markdownText) {
 }
 
 // TODO: 输入框组件，能够接收用户输入的指令并提交
-function InputBox() {
+function InputBox({ pushStep }: { pushStep: (step: StepData) => void }) {
   return (
     <div className="flex items-center p-2 bg-gray-100 rounded-md shadow-sm">
       <input
