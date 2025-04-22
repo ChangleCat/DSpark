@@ -18,7 +18,7 @@ export default function TypewriterInterface() {
   }, [currentLevel]);
 
   if (currentLevel == null) {
-    return <div>关卡不存在</div>;
+    return <LevelNotFound />;
   }
   // 从当前关卡中获取简要说明、前提和目标
   const { brief, premises, goal } = currentLevel;
@@ -52,6 +52,14 @@ interface markdownText {
   markdownText: string;
 }
 
+// 关卡不存在时的提示信息
+function LevelNotFound() {
+  return (
+    <div className="flex items-center justify-center h-full text-gray-500">
+      <p>关卡不存在</p>
+    </div>
+  );
+}
 
 // 这个组件用于显示 Markdown 格式的练习题说明
 // 你可以在这里传入 Markdown 格式的文本，它会被渲染为 HTML

@@ -26,8 +26,5 @@ export default function Level({ params }: Route.LoaderArgs) {
     console.error("Error loading level:", error);
   });
 
-  if (!LevelStore.currentLevel) {
-    LevelStore.loadLevel(0 , 0)
-  }
   return <LevelInterface />;
 }
