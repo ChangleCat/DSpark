@@ -5,11 +5,9 @@ import { useEffect } from'react';
 export default function ChatPanel() {
     const { loadLevel, currentLevel } = useLevelStore();
 
-    useEffect(() => {
-        loadLevel(0, 0);
-    }, [loadLevel]);
+    
 
-    console.log("markdownText", currentLevel?.description);
+    // console.log("markdownText", currentLevel?.description);
     if (!currentLevel) {
         return <div className="h-full w-[calc(25%-5px)] pr-2 pl-2 bg-white overflow-auto">Loading...</div>;
     }

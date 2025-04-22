@@ -2,20 +2,26 @@ import Markdown from "react-markdown";
 import { parseFormula } from "src/ast/ast";
 import type { Formula } from "src/ast/ast";
 import { useLevelStore } from "src/level/level";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function TypewriterInterface() {
   // 从状态管理中获取当前关卡的信息
   const currentLevel = useLevelStore(state => state.currentLevel);
-  if (currentLevel==null) {
+  const [premisesList, setPremisesList] = useState<Formula[]>([]);
+  const [goalStack, setGoalStack] = useState<Formula[]>([]);
+
+  useEffect(() => {
+    if (currentLevel == null) return;
+    const { premises, goal } = currentLevel;
+    setPremisesList(premises.split(',').map(premise => parseFormula(premise)));
+    setGoalStack([parseFormula(goal)]);
+  }, [currentLevel]);
+
+  if (currentLevel == null) {
     return <div>关卡不存在</div>;
   }
   // 从当前关卡中获取简要说明、前提和目标
-  const { brief, premises, goal  } = currentLevel;
-  const [premisesList, setPremisesList] = useState(() => 
-    premises.split(',').map(premise => parseFormula(premise))
-  );
-  const [goalStack, setGoalStack] = useState<Formula[]>([parseFormula(goal)]);
+  const { brief, premises, goal } = currentLevel;
   return (
     <div className="flex flex-col max-h-full flex-1 bg-[#ddf6ff] shadow-sm overflow-hidden">
       <div className="flex-1 bg-white text-black p-2 pt-0">
@@ -80,6 +86,9 @@ interface treeProps {
 
 // TODO: 渲染Proposition树为span树状表达式，优先级和括号处理
 function PropositionTree({tree}: treeProps) {
+  if (!tree) {
+    return <span className="text-gray-500">Invalid formula</span>;
+  }
   switch (tree.kind) {
     case 'forall':
       return (
