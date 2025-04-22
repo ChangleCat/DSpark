@@ -1,14 +1,42 @@
 import Markdown from "react-markdown";
 import { parseFormula } from "src/ast/ast";
 import type { Formula } from "src/ast/ast";
+import { useLevelStore } from "src/level/level";
+import { useState } from "react";
 
 export default function TypewriterInterface() {
+  // 从状态管理中获取当前关卡的信息
+  const currentLevel = useLevelStore(state => state.currentLevel);
+  if (currentLevel==null) {
+    return <div>关卡不存在</div>;
+  }
+  // 从当前关卡中获取简要说明、前提和目标
+  const { brief, premises, goal  } = currentLevel;
+  const [premisesList, setPremisesList] = useState(() => 
+    premises.split(',').map(premise => parseFormula(premise))
+  );
+  const [goalStack, setGoalStack] = useState<Formula[]>([parseFormula(goal)]);
   return (
     <div className="flex flex-col max-h-full flex-1 bg-[#ddf6ff] shadow-sm overflow-hidden">
       <div className="flex-1 bg-white text-black p-2 pt-0">
-        <ExerciseStatement markdownText="事情是这样的"/>
-        <RenderPropositionTree tree={parseFormula("P(x) & (Q(x) -> A(x)) & B(x)")} />
+        <ExerciseStatement markdownText={brief} />
+        <PropositionTree tree={parseFormula(premises)} />
+        <div className="text-blue-500">前件：</div>
+        {/* 显示前提列表 */}
+        <ol>
+        {premisesList.map((premise, index) => (
+          <li key={index}>
+            <span className="inline-block w-4">{index+1}</span>：
+            <PropositionTree tree={premise}/>
+          </li>
+        ))}
+        </ol>
+        {/* 显示目标栈顶部元素 */}
+        <div>
+          <span>目标：</span><PropositionTree tree={goalStack[goalStack.length - 1]} />
+        </div>
       </div>
+      {/* 输入框组件，用户可以在这里输入指令并提交 */}
       <InputBox />
     </div>
   );
@@ -51,18 +79,18 @@ interface treeProps {
 }
 
 // TODO: 渲染Proposition树为span树状表达式，优先级和括号处理
-function RenderPropositionTree({tree}: treeProps) {
+function PropositionTree({tree}: treeProps) {
   switch (tree.kind) {
     case 'forall':
       return (
         <span className="">
-          ∀ {tree.var} <RenderPropositionTree tree={tree.body} />
+          ∀{tree.var}<PropositionTree tree={tree.body} />
         </span>
       );
     case 'exists':
       return (
         <span className="">
-          ∃ {tree.var} <RenderPropositionTree tree={tree.body} />
+          ∃{tree.var}<PropositionTree tree={tree.body} />
         </span>
       );
     case 'predicate':
@@ -74,35 +102,30 @@ function RenderPropositionTree({tree}: treeProps) {
     case 'and':
       return (
         <span className="">
-          <RenderPropositionTree tree={tree.left} /> ∧
-          <RenderPropositionTree tree={tree.right} />
+          <PropositionTree tree={tree.left} /> ∧
+          <PropositionTree tree={tree.right} />
         </span>
       );
     case 'or':
       return (
         <span className="text-blue-500">
-           <RenderPropositionTree tree={tree.left} /> ∨
-           <RenderPropositionTree tree={tree.right} />
+           <PropositionTree tree={tree.left} /> ∨
+           <PropositionTree tree={tree.right} />
         </span>
       );
     case 'not':
-      return <span className="text-green-500"> ¬
-        <RenderPropositionTree tree={tree.formula} />
-      </span>;
+      return <span className="text-green-500">¬<PropositionTree tree={tree.formula} /></span>;
     case 'implies':
       return (
         <span className="text-purple-500">
-          <RenderPropositionTree tree={tree.left} /> →
-          <RenderPropositionTree tree={tree.right} />
+          <PropositionTree tree={tree.left} />→<PropositionTree tree={tree.right} />
         </span>
       );
     // and-I 
     // or-E
     case 'grouping':
       return (
-        <span className="text-red-500">
-          ( <RenderPropositionTree tree={tree.body} /> )
-        </span>
+        <span className="text-red-500">(<PropositionTree tree={tree.body} />)</span>
       );
     // default:
     //   return <span>{`Unknown formula kind: ${tree.kind}`}</span>;
