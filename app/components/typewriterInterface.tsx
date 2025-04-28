@@ -41,6 +41,7 @@ export default function TypewriterInterface() {
   if (currentLevel == null) {
     return <LevelNotFound />;
   }
+  const currentStep = stepList[stepList.length - 1];
   // 从当前关卡中获取简要说明、前提和目标
   const { brief, premises, goal } = currentLevel;
   return (
@@ -52,7 +53,7 @@ export default function TypewriterInterface() {
         ))}
       </div>
       {/* 输入框组件，用户可以在这里输入指令并提交 */}
-      <InputBox pushStep={pushStep}/>
+      <InputBox pushStep={pushStep} curStep={currentStep}/>
     </div>
   );
 }
@@ -121,7 +122,6 @@ function LevelNotFound() {
 }
 
 // 这个组件用于显示 Markdown 格式的练习题说明
-// 你可以在这里传入 Markdown 格式的文本，它会被渲染为 HTML
 function ExerciseStatement({ markdownText }: markdownText) {
   return (
     <div className="markdown">
@@ -130,18 +130,118 @@ function ExerciseStatement({ markdownText }: markdownText) {
   );
 }
 
+interface InputBoxProps { 
+  pushStep: (step: StepData) => void,
+  curStep: StepData
+}
+
 // TODO: 输入框组件，能够接收用户输入的指令并提交
-function InputBox({ pushStep }: { pushStep: (step: StepData) => void }) {
+function InputBox({ curStep, pushStep }: InputBoxProps) {
+  const [input, setInput] = useState("");
+
+  const handleSubmit = () => {
+    try {
+      // 解析用户输入的指令
+      const tokens = input.split(" ");
+      const command = tokens[0];
+      let rule: BaseRule;
+
+      switch (command) {
+        case "and-i": {
+          const left = curStep.premisesList[parseInt(tokens[1])-1];
+          const right = curStep.premisesList[parseInt(tokens[2])-1];
+          rule = { kind: "and-I", left, right };
+          break;
+        }
+        case "and-e": {
+          const formula = curStep.premisesList[parseInt(tokens[1])-1];
+          const side = tokens[2] === "left" ? "left" : "right";
+          rule = { kind: "and-E", formula, side };
+          break;
+        }
+        case "or-i": {
+          const left = parseFormula(tokens[1]);
+          const right = parseFormula(tokens[2]);
+          rule = { kind: "or-I", left, right };
+          break;
+        }
+        case "or-e": {
+          const or = parseFormula(tokens[1]);
+          const left = parseFormula(tokens[2]);
+          const right = parseFormula(tokens[3]);
+          rule = { kind: "or-E", or, left, right };
+          break;
+        }
+        case "implies-e": {
+          const left = curStep.premisesList[parseInt(tokens[1])-1];
+          const right = curStep.premisesList[parseInt(tokens[2])-1];
+          rule = { kind: "implies-E", left, right };
+          break;
+        }
+        case "implies-i": {
+          const left = parseFormula(tokens[1]);
+          const right = parseFormula(tokens[2]);
+          rule = { kind: "implies-I", left, right };
+          break;
+        }
+        case "not-i": {
+          const left = parseFormula(tokens[1]);
+          const right = parseFormula(tokens[2]);
+          rule = { kind: "not-I", left, right };
+          break;
+        }
+        case "not-e": {
+          const left = parseFormula(tokens[1]);
+          const right = parseFormula(tokens[2]);
+          rule = { kind: "not-E", left, right };
+          break;
+        }
+        case "⊥-e": {
+          const F = parseFormula(tokens[1]);
+          const formula = parseFormula(tokens[2]);
+          rule = { kind: "⊥-E", F, formula };
+          break;
+        }
+        case "double-not-e": {
+          const formula = parseFormula(tokens[1]);
+          rule = { kind: "double-not-E", formula };
+          break;
+        }
+        default:
+          throw new Error("未知的指令");
+      }
+
+      // 调用 infer 函数
+      const result = infer(rule);
+
+      // 更新步骤数据
+      pushStep({
+        premisesList: [...curStep.premisesList, result], // 可根据需要更新前提列表
+        goalStack: curStep.goalStack, // 将推导结果作为新的目标
+        userInput: input,
+      });
+
+      // 清空输入框
+      setInput("");
+    } catch (error) {
+      console.error("解析指令失败:", error);
+      alert("输入的指令无效，请检查格式！");
+    }
+  };
+
   return (
     <div className="flex items-center p-2 bg-gray-100 rounded-md shadow-sm">
       <input
         type="text"
         className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
         placeholder="请输入你的指令..."
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
       />
       <button
         className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
         type="button"
+        onClick={handleSubmit}
       >
         提交
       </button>
