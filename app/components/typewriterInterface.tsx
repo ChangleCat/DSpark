@@ -144,7 +144,7 @@ function InputBox({ curStep, pushStep }: InputBoxProps) {
       // 解析用户输入的指令
       const tokens = input.split(" ");
       const command = tokens[0];
-      let rule: BaseRule;
+      let rule: BaseRule | Theorem;
 
       switch (command) {
         case "and-i": {
@@ -160,8 +160,8 @@ function InputBox({ curStep, pushStep }: InputBoxProps) {
           break;
         }
         case "or-i": {
-          const left = parseFormula(tokens[1]);
-          const right = parseFormula(tokens[2]);
+          const left = curStep.premisesList[parseInt(tokens[1])-1];
+          const right = curStep.premisesList[parseInt(tokens[2])-1];
           rule = { kind: "or-I", left, right };
           break;
         }
@@ -203,8 +203,19 @@ function InputBox({ curStep, pushStep }: InputBoxProps) {
           break;
         }
         case "double-not-e": {
-          const formula = parseFormula(tokens[1]);
+          const formula = curStep.premisesList[parseInt(tokens[1])-1];
           rule = { kind: "double-not-E", formula };
+          break;
+        }
+        case "double-not-i": {
+          const formula = curStep.premisesList[parseInt(tokens[1])-1];
+          rule = { kind: "double-not-I", formula };
+          break;
+        }
+        case "mt": {
+          const left = curStep.premisesList[parseInt(tokens[1])-1];
+          const right = curStep.premisesList[parseInt(tokens[2])-1];
+          rule = { kind: "MT", left, right};
           break;
         }
         default:
